@@ -11,9 +11,9 @@
   - [Building Legos](#building-legos)
     - [How do I build a Lego?](#how-do-i-build-a-lego)
     - [Lego spec](#lego-spec)
-    - [contribution guidelines](#contribution-guidelines)
+    - [Contribution guidelines](#contribution-guidelines)
     - [Handling Gitcoin data](#handling-gitcoin-data)
-    - [documenting a new Lego](#documenting-a-new-lego)
+    - [Documenting a new Lego](#documenting-a-new-lego)
   - [Roadmap](#roadmap)
     - [Lego ideas](#lego-ideas)
     - [UX/UI](#uxui)
@@ -38,8 +38,6 @@
 
 Sybils are "fake" users. They are users that do not represent real humans. Sybils are created in order to make a single human appear to be many in order to have outsized weight in a voting protocol or to receive more than a single person's worth of some reward (e.g. an airdrop). These Sybils should be eliminated from a fair voting/funding protocol, but theyare no always easy to detect.
 
-![]()
-
 Do Androids Dream of Electric Sheep tells the story of a detective tasked with eliminating humanoid "replicants" that are almost indistinguishable from natural humans. They do this using a system of tests, including an instrumented interview that look for subtle "tells" such as a limited ability to make complex moral judgments in hypothetical scenarios. Sybil defenders are similarly tasked with distinguishing real and virtual humans in a mixed population where they are difficult to tell apart. They too look for subtle "tells" that give Sybils away. Sometimes the Sybil signals are obvious and unambiguous, sometimes they are not. The additional complication for Sybil hunters is that the entire population exists in a digital space where a human's physical existence cannot be proven by their presence- it can only be demonstrated using forgeable proxies. Reliably linking actions to identities is therefore a subtle science that pieces together multiple lines of evidence to build a personhood profile.
 
 For Gitcoin grants, Sybil detection is extremely important because minimizing the influence of Sybils creates a funding environment that more accurately represents the true preferences of the community of donors. Sybils skew the allocated funds in favour of individual projects to benefit some specific user or group, rather than efficiently distributing funds to genuine public goods. Gitcoin aims to solve for one-human one-vote, while Sybils actuively try to subvert that and unfairly allocate more votes to fewer humans.
@@ -50,7 +48,7 @@ To date, Sybil defense has been executed by a small group of Gitcoin data scient
 
 Gitcoin is decentralizing by converting the core Sybil defense functions into a set of tools that can easily be implemented by users or eventually forked and recombined in creative ways in other projects. This requires the Sybil defense procedures currently managed by humans to be broken down into discrete units, defined in code, documented and made accessible as composable building blocks. These are known as "Legos". Lego bricks are simple building blocks that can be connected to each other in creative combinations to form all kinds of structures or even machines that are much more complex than their component parts. Similarly, modular, composable software tools can be used to build imaginative systems for defending against Sybils. 
 
-![honest user vs Sybil](/assets/man-with-multiple-shadows.webp)
+![honest user vs Sybil](/assets/man-with-multiple-shadows.png)
 
 For Gitcoin grants, Legos start as useful insights from analysis of Gitcoin data - some metric that reveals users to be Sybils. Then, this finding is expressed algorithmically and turned into some executable code. At the moment, most Legos exist in this form - shareable scripts in a Github repository. However, the ideal scenario is to make these Legos executable with no coding required, probably through a web interface where Lego's can be selected to be executed remotely, returning a simple result to the user. 
 
@@ -90,9 +88,11 @@ The outputs from these Legos are collated into a single dataset where each user 
 ## Building Legos
 ### How do I build a Lego?
 ### Lego spec
-### contribution guidelines
+### Contribution guidelines
 ### Handling Gitcoin data
-### documenting a new Lego
+### Documenting a new Lego
+
+
 
 ## Roadmap
 ### Lego ideas
