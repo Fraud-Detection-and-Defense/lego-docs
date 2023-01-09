@@ -1,6 +1,9 @@
 # lego-docs
 
+This page contains documentation for Gitcoin Sybil defense Legos. Please use the table of contents below to navigate the page.
+
 ## Contents
+
 - [lego-docs](#lego-docs)
   - [Contents](#contents)
   - [Introduction](#introduction)
@@ -12,6 +15,7 @@
     - [How do I build a Lego?](#how-do-i-build-a-lego)
     - [Lego spec](#lego-spec)
       - [Inputs](#inputs)
+      - [Outputs](#outputs)
       - [Containerization](#containerization)
         - [Containeriation using Docker:](#containeriation-using-docker)
         - [What is Docker?](#what-is-docker)
@@ -97,6 +101,16 @@ The outputs from these Legos are collated into a single dataset where each user 
 
 ### How do I build a Lego?
 
+In essence, building a Lego means coding up some algorithm that domonstrably has Sybil-detecting efficacy and wrapping it in helper functions that enhance its useability. A common workflow might be:
+
+1) Exploratory analysis of gitcoin data that reveals some Sybil predictor
+2) Encoding of the algorithm as a script in preferred language
+3) Wrapping of the algorithm in helper functions for data wrangling, cleaning, and output formatting
+4) Containerization, e.g. using Docker, to remove dependency friction for users
+5) Writing clear documentation on this page and/or elsewhere that enables others to use the Lego
+
+The following sections explain this in more detail, startign with the "Lego spec" where the desirable properties for a new Lego are defined.
+
 ### Lego spec
 
 This section details the desired properties for a new Lego.
@@ -108,6 +122,15 @@ The Lego should only require some subset of the following data as inputs:
   - Ethereum address: User's Ethereum address
   - Passport ID: User's Gitcoin passport digital identifier
   - Grant round nonce: A counter that tracks the number of donations a user has made in a round 
+
+#### Outputs
+
+The Lego should output one or both of:
+
+- a Boolean: representing Sybil or non-Sybil as predicted by the Lego
+  - 1 = Sybil, 0 = non-Sybil
+- a float: representing the Sybil likelihood or "trust score" as predicted by the Lego.
+  - higher score = greater likelihood of being Sybil (`trust = 1-score`)
 
 #### Containerization
 
