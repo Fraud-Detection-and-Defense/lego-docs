@@ -164,7 +164,7 @@ So to continue with this metaphore: we’re building an image when we’re insta
 
 **Docker File**
 
-A Docker image is built from a Dockerfile. This file is the configuration file, and describes several things: from what previous docker image you are building this one, how to configure the OS, and what happens when you run the container. In a sense, it’s a little bit like the DESCRIPTION + NAMESPACE files of an R package, which describes which are the dependencies to your package, gives meta information, and states which functions and data are to be available to the users library()ing the package.
+A Docker image is built from a Dockerfile. This file is the configuration file, and describes several things: from what previous docker image you are building this one, how to configure the OS, and what happens when you run the container. It describes which are the dependencies to your package, gives meta information, and states which functions and data are to be available to the users.
 
 So, let’s build a very basic Dockerfile for R, focused on reproducibility. The idea is this one: I have today an analysis that works (for example contained in a .R file), and I want to be sure this analysis will always work in the future, regardless of any update to the packages used.
 
@@ -182,7 +182,7 @@ So first, create a folder for your analysis, and a Dockerfile:
 *touch Dockerfile*
 ```
 
-And let’s say this is the content of the analysis we want to run, called myscript.R, and located in the ~/mydocker folder:
+And let’s say this is the content of the analysis we want to run, called `myscript.R`, and located in the `~/mydocker` folder:
 
 ```jsx
 *library(tidystringdist)*
@@ -202,11 +202,9 @@ And let’s say this is the content of the analysis we want to run, called myscr
 
 **FROM**
 
-Every Dockerfile starts with a FROM, which describes what image we are building our image from. There are a lot of official images, and you can also build from a local one.
+Every Dockerfile starts with a `FROM`, which describes what image we are building our image from. There are a lot of official images, and you can also build from a local one.
 
-This FROM is, in a way, describing the dependency of your image ; just as in R, when building a package, you always rely on another package (be it only the {base} package).
-
-If you’re going for an R based image, Dirk Eddelbuettel & Carl Boettiger are maintaining rocker, a collection of Docker images for R you can use. The basic image is rocker/r-base, but what we want is our image to be reproducible: that is to say to rerun the exact same way anytime we run it. For this, we’ll be using rocker/r-ver, which are Docker images containing a fixed version of R (back to 3.1.0), and that you can run as if from a specific date. So what we’ll do is look up the image corresponding to the R version we want. You can get your current R Version with:
+This `FROM` is, in a way, describing the dependency of your image. If you’re going for an R based image, Dirk Eddelbuettel & Carl Boettiger are maintaining rocker, a collection of Docker images for R you can use. The basic image is `rocker/r-base`, but what we want is our image to be reproducible: that is to say to rerun the exact same way anytime we run it. For this, we’ll be using `rocker/r-ver`, which are Docker images containing a fixed version of R (back to 3.1.0), and that you can run as if from a specific date. So what we’ll do is look up the image corresponding to the R version we want. You can get your current R Version with:
 
 ```jsx
 *R.Version()$version.string*
@@ -226,7 +224,7 @@ So, let’s start the Dockerfile with:
 
 **RUN**
 
-Once we’ve got that, we’ll add some RUN statements: these are commands which mimic command line commands. we’ll create a directory to receive our analysis.
+Now we’ll add some `RUN` statements. These are commands which mimic command line commands. we’ll create a directory to receive our analysis.
 
 ```jsx
 *FROM rocker/r-ver:3.4.4*
@@ -238,7 +236,7 @@ Once we’ve got that, we’ll add some RUN statements: these are commands which
 
 **Install our package**
 
-The command to make R execute something, from the terminal, is R -e "my code". Let’s use it to install our script dependencies, but from a specific date. We’ll mimic the way rocker/r-ver works when building from a specific date: setting the options("repos") to this specific date, using the MRAN image: in other word, using a repo url like https://mran.microsoft.com/snapshot/1979-01-01.
+The command to make R execute something, from the terminal, is `R -e "my code"`. Let’s use it to install our script dependencies, but from a specific date. We’ll mimic the way `rocker/r-ver` works when building from a specific date: setting the options("repos") to this specific date, using the MRAN image: in other word, using a repo url like https://mran.microsoft.com/snapshot/1979-01-01.
 
 ```jsx
 *FROM rocker/r-ver:3.4.4*
@@ -262,7 +260,7 @@ The command to make R execute something, from the terminal, is R -e "my code". L
 
 **Making it more programmable with ARG**
 
-In our last Dockerfile, the date can’t be modified at build time - something we can change if we use an ARG variable, that will be set when we’ll do docker build, with --build-arg WHEN=
+In our last Dockerfile, the date can’t be modified at build time - something we can change if we use an ARG variable, that will be set when we’ll do docker build, with `--build-arg WHEN=`
 
 ```jsx
 *FROM rocker/r-ver:3.4.4*
@@ -288,11 +286,11 @@ In our last Dockerfile, the date can’t be modified at build time - something w
 *install.packages('tidystringdist')"*
 ```
 
-Here, the {tidystringdist} that will be installed in the machine will be the one from the date we will specify when building the container, even if we build this image in one year, or two, or four.
+Here, the `{tidystringdist}` that will be installed in the machine will be the one from the date we will specify when building the container, even if we build this image in one year, or two, or four.
 
 **COPY**
 
-Now, I need to get the script for my analysis from my machine (host) to the container. For that, we’ll need to use COPY localfile pathinthecontainer. Note that here, the myscript.R has to be in the same folder as the Dockerfile on your computer.
+Now, I need to get the script for my analysis from my machine (host) to the container. For that, we’ll need to use `COPY` localfile path in the container. Note that here, the `myscript.R` has to be in the same folder as the Dockerfile on your computer.
 
 ```jsx
 *FROM rocker/r-ver:3.4.4*
@@ -324,7 +322,7 @@ Now, I need to get the script for my analysis from my machine (host) to the cont
 
 **CMD**
 
-Now, CMD, which is the command to be run every time you launch the docker. What we want is myscript.R to be sourced.
+Now, `CMD`, which is the command to be run every time you launch the docker. What we want is `myscript.R` to be sourced.
 
 ```jsx
 *FROM rocker/r-ver:3.4.4*
@@ -362,7 +360,7 @@ Now, CMD, which is the command to be run every time you launch the docker. What 
 
 **Build**
 
-Remember what we want: an image that will, ad vitam aeternam, run an analysis as if we were still today. To do this, we’ll use the --build-arg WHEN= argument for the docker build. Just after the =, put the date you want your analysis to be run from.
+Remember what we want: an image that will run an analysis exactly as we defined today, even if it is actually run far in the future. To do this, we’ll use the `--build-arg WHEN=` argument for the docker build. Just after the `=`, put the date you want your analysis to be run from.
 
 Now, go and build your image. From your terminal, in the directory where the Dockerfile is located, run:
 
@@ -370,7 +368,7 @@ Now, go and build your image. From your terminal, in the directory where the Doc
 *docker build --build-arg WHEN=2019-01-06 -t analysis .*
 ```
 
-- t name is the name of the image (here analysis), and . means it will build the Dockerfile in the current working directory.
+`- t name` is the name of the image (here `analysis`), and `.` means it will build the Dockerfile in the current working directory.
 
 **Run**
 
@@ -380,13 +378,13 @@ Then, just launch with:
 *docker run analysis*
 ```
 
-And your analysis will be run
+And your analysis will be run.
 
 **Export container content**
 
-One thing to do now: you want to access what is created by your analysis (here p.csv) outside your container ; i.e, on the host. Because yes, as for now, everything that happens in the container stays in the container. So what we need is to make the docker container share a folder with the host. For this, we’ll use what is called Volume, which are (roughly speaking), a way to tell the Docker container to use a folder from the host as a folder inside the container.
+One thing to do now: you want to access what is created by your analysis (here `p.csv`) outside your container ; i.e, on the host. For now, everything that happens in the container stays in the container. So what we need is to make the docker container share a folder with the host. For this, we’ll `Volume`, which are (roughly speaking), a way to tell the Docker container to use a folder from the host as a folder inside the container.
 
-That way, everything that will be created in the folder by the container will persist after the container is turned off. To do this, we’ll use the -v flag when running the container, with path/from/host:/path/in/container. Also, create a folder to receive the results in both :
+That way, everything that will be created in the folder by the container will persist after the container is turned off. To do this, we’ll use the `-v` flag when running the container, with `path/from/host:/path/in/container`. Also, create a folder to receive the results in both:
 
 ```jsx
 *FROM rocker/r-ver:3.4.4*
@@ -436,9 +434,9 @@ That way, everything that will be created in the folder by the container will pe
 *docker run -v ~/mydocker/results:/home/results  analysis*
 ```
 
-```jsx
+
 Wait for the computation to be done, and…
-```
+
 
 ```jsx
 *ls ~/mydocker/results*
@@ -452,9 +450,9 @@ Wait for the computation to be done, and…
 
 So now, every time you’ll launch this Docker image, the analysis will be performed and you’ll get the result back. With no problem of dependencies: the packages will always be installed from the day you desire. Although, this can be a little bit long to run as the packages are installed each time you run the container. But as I said in the Disclaimer, this is a basic introduction to Docker, R and reproducibility, so the goal was more to get beginners on board with Docker :)
 
-Other things you can do would be:
+Other things you can do include:
 
-- Use remotes::install_version() if you want your analysis to be based on package version instead of a time based installation	.
+- Use `remotes::install_version()` if you want your analysis to be based on package version instead of a time based installation	.
 
 ```jsx
 *FROM rocker/r-ver:3.4.4*
@@ -472,7 +470,8 @@ Other things you can do would be:
 *…*
 ```
 
-- Use the Volume trick to bring data into your container, so that any data will be analysed in the very same environment.
+- Use the `Volume` trick to bring data into your container, so that any data will be analysed in the very same environment.
+
 
 ### Contribution guidelines
 
