@@ -9,6 +9,7 @@ This page contains documentation for Gitcoin Sybil defense Legos. Please use the
   - [Introduction](#introduction)
     - [What is Sybil defense?](#what-is-sybil-defense)
     - [What are Legos?](#what-are-legos)
+  - [Who uses Legos?](#who-uses-legos)
   - [What does a lego look like?](#what-does-a-lego-look-like)
   - [What Legos are already available?](#what-legos-are-already-available)
   - [Building Legos](#building-legos)
@@ -62,7 +63,19 @@ Gitcoin is decentralizing by converting the core Sybil defense functions into a 
 
 ![](https://i.imgur.com/kAEnsYf.png)
 
-For Gitcoin grants, Legos start as useful insights from analysis of Gitcoin data - some metric that reveals users to be Sybils. Then, this finding is expressed algorithmically and turned into some executable code. At the moment, most Legos exist in this form - shareable scripts in a Github repository. However, the ideal scenario is to make these Legos executable with no coding required, probably through a web interface where Lego's can be selected to be executed remotely, returning a simple result to the user. 
+For Gitcoin grants, Legos start as useful insights from analysis of Gitcoin data - some metric that reveals users to be Sybils. Then, this finding is expressed algorithmically and turned into some executable code. The ideal scenario we are workijg towards is for the Legos to be executable with no coding required, probably through a web interface where Lego's can be selected to be executed remotely, returning a simple result to the user. 
+
+In summary:
+
+Each Lego is an analysis which is known to be evidence that an account is Sybil. 
+
+## Who uses Legos?
+
+The primary user persona for fraud defense tools is the “Fraud Consultant”. This is a person who understands the past sybil attacks and steps taken to mitigate them. They are not only able to consult program & round operators, but also other uses of Passport, Project, and Program protocols.
+
+The second user persona for fraud defense tools is the “Round Operator”. Most likely this will be someone on the Gitcoin PGF workstream team for early rounds. Their primary interest is maintaining a happy community where funders and donors both feel that capital is optimally distributed in their program (or at least as close as possible).
+
+The “round operator” is the persona of someone focused on a single instance of a grant round voting event. The term “program operator” is referring to the operator of multiple rounds for the same program. Imagine Uniswap hosts 4 rounds per year. The program operator and round operator are likely, but not necessarily the same person. “Event operator” further abstracts this role to include events which are not Gitcoin Grants related such as a vote on snapshot (which has integrated Passport).
 
 ## What does a lego look like?
 
@@ -97,11 +110,14 @@ Several Lego's are already being used to manage Sybils in Gitcoin grants. These 
 The outputs from these Legos are collated into a single dataset where each user has a Sybil likelihood as measured across several dimensions. A threshold value that separates "suspicious" and "not suspicious" users can be applied to each metric individually such that the final dataset is a set of Booleans for each user, and the final decision about whether to omit or allow a particular user is a simple summation (e.g. if sum > 3, squelch). Alternatively, the actual value from each metric can be propagated to the final dataset and a (weighted) average applied there to identify Sybils. Either way, the outputs from the Legos themselves are aggregated and used collectively to come to a decision about the trustability of the user. In summary, the Legos are run independently and the results passed to an aggregator. The user sees the result of each independent Lego and also the result of the aggregator - i.e. they get an overall Sybil likelihood score/trust score and also a break down of the individual Sybil "dimensions".
 
 
+
+
+
 ## Building Legos
 
 ### How do I build a Lego?
 
-In essence, building a Lego means coding up some algorithm that domonstrably has Sybil-detecting efficacy and wrapping it in helper functions that enhance its useability. A common workflow might be:
+In essence, building a Lego means coding up some algorithm that demonstrably has Sybil-detecting efficacy and wrapping it in helper functions that enhance its useability. A common workflow might be:
 
 1) Exploratory analysis of gitcoin data that reveals some Sybil predictor
 2) Encoding of the algorithm as a script in preferred language
@@ -498,10 +514,24 @@ Other things you can do include:
 
 ### Contribution guidelines
 
+To contribute to this documentation, pelase clone this repository, make your updates and raise a pullk request, For more information on how to raise a PR, see [this guide](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/getting-started/about-collaborative-development-models). 
+
+To contribute to Lego development, one of the best ways is to participate in one of the community hackathons (there have been two so far). New ideas for Legos can always be discussed with the Gitcoin community on the Gitcoin discord server. Anyone can create a Lego at any time, but it is recommended to reach out to folks in the Gitcoin and Gitcoin Passport community to avoid duplicating efforts!
+
+
 ### Handling Gitcoin data
+
+TBC
 
 ### Documenting a new Lego
 
+If you build a new Lego, it is important to explain how it works to others in the community. Your Lego might require some detailed documentation that you may wish to host independently. However, it is also improtant to make your Lego visible to the rest o the Sybil defense community. This page is a great way to do that, and it can become a go-to resource for Lego builders and users. To add documentation to this page:
+
+1) Add the Lego name and a one-line description to the bullet list in [What Legos currently exist](#what-legos-are-already-available)
+2) Create a H3 header (title preceded by three hashes) for your Lego. The header should be your Lego name. Put this in the [Lego documentation](#lego-documentation) section of this page (i.e. copy the formatting from the other subsections in Lego Documentation)
+3) In that new section, add documentation for your Lego. This should include some background to help readers understand the concept, some information about the analysis done to verify Sybil-detection efficacy, and intructions for how the Lego should be used.
+4) Add a link to the Github repository for your Lego source code. Also link to any other implementations (e.g. web app).
+5) Let us know in the Gitcoin discord and/or on Twitter!
 
 
 ## Roadmap
