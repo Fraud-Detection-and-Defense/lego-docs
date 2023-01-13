@@ -608,16 +608,16 @@ Add links to gitcoin data downloads here
 
 ## Resources
 
-[Gitcoin governance forum](https://gov.gitcoin.co/)
-[Gitcoin discord](https://discord.gg/gitcoin)
-[Open Data Community discord](https://discord.gg/Ye3QrWf6fG)
+- [Gitcoin governance forum](https://gov.gitcoin.co/)
+- [Gitcoin discord](https://discord.gg/gitcoin)
+- [Open Data Community discord](https://discord.gg/Ye3QrWf6fG)
 
 
 ### FAQs
 
 ### Read/Watch/Listen
 
-[Using FDD defense tools in a protocol future](https://gov.gitcoin.co/t/using-fdd-fraud-defense-tools-in-a-protocol-future/12526)
-[Passport scoring-as-a-service](https://gov.gitcoin.co/t/passport-scoring-as-a-service/12419)
-[Public goods Legos 1: introduction](https://gov.gitcoin.co/t/anti-sybil-legos/12265)
-[Public goods Legos 2: roadmap](https://gov.gitcoin.co/t/public-goods-legos-roadmap/12546)
+- [Using FDD defense tools in a protocol future](https://gov.gitcoin.co/t/using-fdd-fraud-defense-tools-in-a-protocol-future/12526)
+- [Passport scoring-as-a-service](https://gov.gitcoin.co/t/passport-scoring-as-a-service/12419)
+- [Public goods Legos 1: introduction](https://gov.gitcoin.co/t/anti-sybil-legos/12265)
+- [Public goods Legos 2: roadmap](https://gov.gitcoin.co/t/public-goods-legos-roadmap/12546)
