@@ -12,6 +12,10 @@ This page contains documentation for Gitcoin Sybil defense Legos. Please use the
   - [Who uses Legos?](#who-uses-legos)
   - [What does a lego look like?](#what-does-a-lego-look-like)
   - [What Legos are already available?](#what-legos-are-already-available)
+    - [Example use-cases](#example-use-cases)
+      - [Example 1](#example-1)
+      - [Example 2](#example-2)
+      - [Example 3](#example-3)
   - [Building Legos](#building-legos)
     - [How do I build a Lego?](#how-do-i-build-a-lego)
     - [Lego spec](#lego-spec)
@@ -38,6 +42,7 @@ This page contains documentation for Gitcoin Sybil defense Legos. Please use the
     - [DonorDNA](#donordna)
     - [GrantDNA](#grantdna)
     - [Onchain Intersectionality](#onchain-intersectionality)
+    - [scoring algorithm/aggregator](#scoring-algorithmaggregator)
   - [Resources](#resources)
     - [FAQs](#faqs)
     - [Read/Watch/Listen](#readwatchlisten)
@@ -110,7 +115,49 @@ Several Lego's are already being used to manage Sybils in Gitcoin grants. These 
 The outputs from these Legos are collated into a single dataset where each user has a Sybil likelihood as measured across several dimensions. A threshold value that separates "suspicious" and "not suspicious" users can be applied to each metric individually such that the final dataset is a set of Booleans for each user, and the final decision about whether to omit or allow a particular user is a simple summation (e.g. if sum > 3, squelch). Alternatively, the actual value from each metric can be propagated to the final dataset and a (weighted) average applied there to identify Sybils. Either way, the outputs from the Legos themselves are aggregated and used collectively to come to a decision about the trustability of the user. In summary, the Legos are run independently and the results passed to an aggregator. The user sees the result of each independent Lego and also the result of the aggregator - i.e. they get an overall Sybil likelihood score/trust score and also a break down of the individual Sybil "dimensions".
 
 
+### Example use-cases
 
+Here are a few examples of how this will work in practice, for Gitcoin Grants specifically.
+
+#### Example 1 
+
+A Program/Round Operator would like to “gate” access to voting in a QF/QV vote. A Gitcoin Fraud Analyst might recommend that they use some combination of stamps or Passport score to gate their particular round.
+
+Passport Scores are instance-specific and are applied by the event operator. A passport score may be applied to a user when participating in a vote/round. They may apply a score when the user joins a community. How a score is used is always on the event operator side of the system. The ability to update or change a score is therefore irrelevant because the event operator can always choose to modify how they interpret an existing score provided by Gitcoin or anyone else. Criteria might include:
+
+- A set of specific stamps a user MUST have
+- A number of total stamps a user MUST have
+- Use the Boolean Output of one of Gitcoin’s Passport Scoring as a Service (PSaaS) models
+- Use a combination of "PSaaS + another requirement
+- Design custom set of stamp weights (or download another user/community list)
+- An event operator can always create an “escape hatch” where a user who is denied can do some other action to “prove” they should be allowed
+
+#### Example 2
+
+A Program/Round operator would like to gate access to only users who have a passport without any stamp/scoring requirements. They instead wish to “weight” the users voice in the vote. The reason they would use Passport stamps for weighting rather than onchain wallet signals is because Passport provides a shared ETL layer for their community to verify, validate, and reproduce algorithmic policy decisions.
+
+Simple algorithms:
+
+- decrease weight by 50% if less than 2 stamps
+- increase weight by 100% if more than 2 stamps
+
+Complicated algorithms:
+
+- Quadratically increase voice for each stamp a user has
+- Create custom teir levels of stamps with associated voice benefits if user has x & y stamps, then use the PSaaS to weight their voice
+- PSaaS Cost of Forgery Model
+
+Complex algorithms:
+
+- PSaaS regression models
+- Create a custom ML model
+- Host your own community semi-supervised reinforcement learning model
+
+#### Example 3 
+
+A Program/Round operator would like to hold the right to “squelch” (apply a 0 coefficient) to a user during or after the round based on behavior during the round.
+
+Uses the complete Fraud Defense Stack during the round to assign a subset of users to “Thor & Loki datasets” (for sure sybil & not sybil) which can be used to run a standardized Machine Learning model against using Passport Stamps as the only features in the model. At first this seems  counter-productive, but the purpose of doing this is to allow the community to verify and reproduce the results, validate the ML model, and have humans evaluate the Thor & Loki datasets (Gitcoin training datasets containing known honest users and known Sybils).
 
 
 ## Building Legos
@@ -551,7 +598,7 @@ Add links to gitcoin data downloads here
 ### DonorDNA
 ### GrantDNA
 ### Onchain Intersectionality
-
+### scoring algorithm/aggregator
 
 ## Resources
 ### FAQs
