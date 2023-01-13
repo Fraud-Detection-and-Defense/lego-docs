@@ -561,7 +561,7 @@ Other things you can do include:
 
 ### Contribution guidelines
 
-To contribute to this documentation, pelase clone this repository, make your updates and raise a pullk request, For more information on how to raise a PR, see [this guide](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/getting-started/about-collaborative-development-models). 
+To contribute to this documentation, please clone this repository, make your updates and raise a pull request, For more information on how to raise a PR, see [this guide](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/getting-started/about-collaborative-development-models). 
 
 To contribute to Lego development, one of the best ways is to participate in one of the community hackathons (there have been two so far). New ideas for Legos can always be discussed with the Gitcoin community on the Gitcoin discord server. Anyone can create a Lego at any time, but it is recommended to reach out to folks in the Gitcoin and Gitcoin Passport community to avoid duplicating efforts!
 
