@@ -42,7 +42,7 @@ This page contains documentation for Gitcoin Sybil defense Legos. Please use the
     - [DonorDNA](#donordna)
     - [GrantDNA](#grantdna)
     - [Onchain Intersectionality](#onchain-intersectionality)
-    - [scoring algorithm/aggregator](#scoring-algorithmaggregator)
+    - [Scoring algorithm/aggregator](#scoring-algorithmaggregator)
   - [Resources](#resources)
     - [FAQs](#faqs)
     - [Read/Watch/Listen](#readwatchlisten)
@@ -561,7 +561,13 @@ Other things you can do include:
 
 ### Contribution guidelines
 
-To contribute to this documentation, please clone this repository, make your updates and raise a pull request, For more information on how to raise a PR, see [this guide](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/getting-started/about-collaborative-development-models). 
+To contribute to this documentation, please raise a pull request against this repository. There are two options for doing this:
+1) clone this repository and create updates in fresh branches. Raise pull requests from your new branch to `main`
+2) Fork this repository so you have your own copy. Clone your fork, and raise pull requests from there.
+
+For more information on how to raise a PR, see [this guide](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/getting-started/about-collaborative-development-models). 
+
+You can also request changes by raising issues in this repository. The code owners will review the issue board regularly and do their best to accommodate reasonable requests.
 
 To contribute to Lego development, one of the best ways is to participate in one of the community hackathons (there have been two so far). New ideas for Legos can always be discussed with the Gitcoin community on the Gitcoin discord server. Anyone can create a Lego at any time, but it is recommended to reach out to folks in the Gitcoin and Gitcoin Passport community to avoid duplicating efforts!
 
@@ -598,8 +604,20 @@ Add links to gitcoin data downloads here
 ### DonorDNA
 ### GrantDNA
 ### Onchain Intersectionality
-### scoring algorithm/aggregator
+### Scoring algorithm/aggregator
 
 ## Resources
+
+[Gitcoin governance forum](https://gov.gitcoin.co/)
+[Gitcoin discord](https://discord.gg/gitcoin)
+[Open Data Community discord](https://discord.gg/Ye3QrWf6fG)
+
+
 ### FAQs
+
 ### Read/Watch/Listen
+
+[Using FDD defense tools in a protocol future](https://gov.gitcoin.co/t/using-fdd-fraud-defense-tools-in-a-protocol-future/12526)
+[Passport scoring-as-a-service](https://gov.gitcoin.co/t/passport-scoring-as-a-service/12419)
+[Public goods Legos 1: introduction](https://gov.gitcoin.co/t/anti-sybil-legos/12265)
+[Public goods Legos 2: roadmap](https://gov.gitcoin.co/t/public-goods-legos-roadmap/12546)
