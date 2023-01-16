@@ -635,6 +635,8 @@ The image below shows a prototype "Sybil dashboard". A user has input their user
 
 There will necessarily be costs associated with executing some Legos. This means there is value in refining existing Legos to make them more efficient. For example, there may be cost savings associated with refactoring Python/R code to vectorize as much as possible and minimize loops, or perhaps replacing (e.g.) Python code designed to execute in a virtual machine with (e.g.) compiled C code that implements the same algorithm. The end-user should not notice the change, as they still only interact with a user-interface that chooses a Lego, but the cost to execute the Lego is decreased.
 
+Read more about the [Lego development roadmap](https://gov.gitcoin.co/t/public-goods-legos-roadmap/12546).
+
 ## Lego Documentation
 ### Gitcoin passport
 ### Levenstein Distance
