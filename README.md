@@ -33,7 +33,6 @@ This page contains documentation for Gitcoin Sybil defense Legos. Please use the
     - [Lego ideas](#lego-ideas)
     - [UX/UI](#uxui)
     - [Performance](#performance)
-  - [Downloads](#downloads)
   - [Lego Documentation](#lego-documentation)
     - [Gitcoin passport](#gitcoin-passport)
     - [Levenstein Distance](#levenstein-distance)
@@ -603,13 +602,38 @@ If you build a new Lego, it is important to explain how it works to others in th
 
 
 ## Roadmap
+
 ### Lego ideas
+
+During Season 14, Gitcoin Passport was integrated into Bankless Academy. Analysis revealed that Gitcoin Passport was most powerful when combined with additional anti-Sybil Legos.
+
+- **Farmer Boolean**: (uses on-chain data to determine whether a user has >X ERC-20 tokens and an average transaction value <Y ETH)
+- **Onchain History Boolean**: (has a user engaged in certain web3 activities in a specific timeframe? Activites and timeframe can be customized by round owner)
+- **Money-Mixer**: (Does a user interact with mixers e.g. Tornado cash)
+- **On-Trend / Off-Trend**: (is the donation profile of a user similar to a grant’s target community?)
+- **Flagged Activity on Etherscan**: (is an address closely associated with addresses flagged as phishing/spam on etherscan?)
+
+There are many possibilities for more Legos - any analysis that can be shown to be indicative of Sybil behaviour and implementable as an algorithm could be turned into a Lego. Some might be relatively complex analyses of on-chain data, like detecting when a user has rapidly swapped funds back and forth in order to seem more active. Sequences of rapid transactions between wallets, especially when they are ultimately returned to where they started or at least stay within a small group of addresses, could be a Sybil behaviour. Other on-chain indicators might be whether a wallet was initially funded from a contract, as this might be a way for Sybil attackers to automate their donations from many externally-owned accounts.
+
+Other simple Legos could be checks for users that hold certain POAPs or NFTs. Some POAPs and NFTs are easy to farm, others require significant investment of time and/or capital. For example, some education programs award their graduates NFTs as proof of completion - those are difficult to farm without taking a course, and they are in very limited supply so the total bribable population is small - ownership of these credentials is good evidence a user is not a Sybil attacker.
+
+Some specific NFTs and POAPs might be especially high-signal for certain communities - e.g. POAPs distributed in community calls or at in-person meetups. There is also high potential for creating Legos based on past behaviours and interactions with other grant rounds - e.g. has a particular address donated to grants that have been flagged as fraudulent in the past - if so, how often? If some threshold of a user’s donations, say 50%, have gone to flagged grants, the user gets flagged too.
+
+Not all Legos have to use on-chain data. There may be more Sybil signals that can be extracted using clever analysis of Gitcoin data - DonorDNA and GrantDNA are good examples of existing Legos that only use off-chain data.
+
 ### UX/UI
+
+Right now, these Legos exist as code that is run manually by data scientists. The code is run against individual Ethereum addresses and Gitcoin usernames to determine their Sybil-likelihoood. They are currently run as independent, standalone algorithms, although development is tending towards increased automation and interoperability so that users are better able to implement these algorithms for themselves.
+
+Ultimately, UX improvements are necessary for these Legos to be decentralized and maximully powerful in a protocol-based grants platform. This can be a stepwise process, first making the Lego code as accessible as possible with clear documentation and examples, then making it easy to execute in a minimal code workflow using, for example, containers. Then, the ultimate form would be no-code implementations where the Lego execution is abstracted away behind a web-app or similar graphical interface. 
+
+The image below shows a prototype "Sybil dashboard". A user has input their user addresses into a web app and the dashboard is displaying the Lego predictions for their users. This allows a round owner to tell whether their round is under attack. 
+
+![Sybil dashboard](./assets/dashboard.png)
+
 ### Performance
 
-## Downloads
-
-Add links to gitcoin data downloads here
+There will necessarily be costs associated with executing some Legos. This means there is value in refining existing Legos to make them more efficient. For example, there may be cost savings associated with refactoring Python/R code to vectorize as much as possible and minimize loops, or perhaps replacing (e.g.) Python code designed to execute in a virtual machine with (e.g.) compiled C code that implements the same algorithm. The end-user should not notice the change, as they still only interact with a user-interface that chooses a Lego, but the cost to execute the Lego is decreased.
 
 ## Lego Documentation
 ### Gitcoin passport
