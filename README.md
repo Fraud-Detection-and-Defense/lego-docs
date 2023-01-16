@@ -574,20 +574,20 @@ To contribute to Lego development, one of the best ways is to participate in one
 
 ### Handling Gitcoin data
 
-Gitcoin data can be downloaded from [fddhub.io](fddhub.io/downloads). This includes historic round data dating back to Grants Round 3.
+Gitcoin data can be downloaded from [fddhub.io](https://fddhub.io/downloads/grant_rounds). This includes historic round data dating back to Grants Round 3.
 
 ![fddhub.io](./assets/downloads-page.png)
 
 The data is available as csv files for each grant round. Inside the csv file, the data are organized with each column representing a variable and a row per user. The variables are:
 
-- address: user's Etheruem address
-- grant_id: unique identifier for a grant
-- checkout_type: what was the payment network? (e.g. ZK-sync, Polygon, Ethereum Mainnet)
-- amount_in_usdt: value of donation in US dollars
-- raw_amount_in_token: value of the donation denomninated in the donated token
-- token	amount_in_token_minus_gas: value of the donation after gas is subtracted
-- tx_id: unique identifier for the transaction (onlky available for n on-privacy preserving networks - i.e. not available for ZK platforms)	
-- created_on: date donation was sent
+- **address**: user's Etheruem address
+- **grant_id**: unique identifier for a grant
+- **checkout_type**: what was the payment network? (e.g. ZK-sync, Polygon, Ethereum Mainnet)
+- **amount_in_usdt**: value of donation in US dollars
+- **raw_amount_in_token**: value of the donation denomninated in the donated token
+- **token	amount_in_token_minus_gas**: value of the donation after gas is subtracted
+- **tx_id**: unique identifier for the transaction (onlky available for n on-privacy preserving networks - i.e. not available for ZK platforms)	
+- **created_on**: date donation was sent
 
 ![data example](./assets/data-example.png)
 
