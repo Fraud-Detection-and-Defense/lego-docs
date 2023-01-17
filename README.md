@@ -570,7 +570,9 @@ For more information on how to raise a PR, see [this guide](https://docs.github.
 
 You can also request changes by raising issues in this repository. The code owners will review the issue board regularly and do their best to accommodate reasonable requests.
 
-To contribute to Lego development, one of the best ways is to participate in one of the community hackathons (there have been two so far). New ideas for Legos can always be discussed with the Gitcoin community on the Gitcoin discord server. Anyone can create a Lego at any time, but it is recommended to reach out to folks in the Gitcoin and Gitcoin Passport community to avoid duplicating efforts!
+To contribute to Lego development, one of the best ways is to participate in one of the [community hackathons](https://github.com/orgs/OpenDataforWeb3) (there have been two so far). New ideas for Legos can always be discussed with the Gitcoin community on the Gitcoin discord server. Anyone can create a Lego at any time, but it is recommended to reach out to folks in the Gitcoin and Gitcoin Passport community to avoid duplicating efforts!
+
+⚠️ For documentation purposes, please avoid uploading files such as docx, pdf, etc. to our github. Ideally PRs will directly update the README - i.e the relevant changes are made by the contributor, not the PR reviewer/code owners. Then they can be edited, reviewed and merged collaboratively and transparently. 
 
 
 ### Handling Gitcoin data
