@@ -43,7 +43,9 @@ This page contains documentation for Gitcoin Sybil defense Legos. Please use the
     - [Onchain Intersectionality](#onchain-intersectionality)
     - [Scoring algorithm/aggregator](#scoring-algorithmaggregator)
   - [How to use the Gitcoin Passport stamp scoring app](#how-to-use-the-gitcoin-passport-stamp-scoring-app)
-      - [Create a scoring method](#create-a-scoring-method)
+    - [Introduction](#introduction-1)
+    - [Create a scoring method](#create-a-scoring-method)
+      - [How to create a scoring method:](#how-to-create-a-scoring-method)
       - [Compare existing scoring methods](#compare-existing-scoring-methods)
         - [Distribution:](#distribution)
         - [Stats:](#stats)
@@ -661,6 +663,8 @@ Gitcoin passport have their own [documentation website](https://docs.passport.gi
 
 ## How to use the Gitcoin Passport stamp scoring app
 
+### Introduction
+
 Passport is a decentralized identifier. Users collect “stamps” from different authenticators around web2 and web3, such as Bright ID and Proof of Humanity. Stamps are verifiable credentials – by aggregating several of them in one place, Passport distributes trust across multiple entities. After integrating with Passport, instead of relying on a middleman to verify someone’s identity, dApps can verify it themselves with a customizable algorithm that weights different stamps according to their preferences, essentially allowing communities to create a customizable visa with their participation requirements. The passport stamp scoring and exploration app is a web based tool that allows you to view adoption statistics related to the current set of Gitcoin Passport stamps, compare existing scoring methods by their sybil detection accuracy, and even create your customized score from directly within the app. The application comprises a total number of 54 stamps that can be used for different computations.
 
 The homepage of this application comprises five tabs, each of which will be discussed in detail in the subsequent sections. 
@@ -696,11 +700,11 @@ The second tab of the passport stamp scoring and exploration application is wher
 - Ordinary Logistic regression coefficient 
 - Cost of forgery (COF kish weight)
 - FDD regen weight
- 
+
 
 ![passport app](./assets/passport-app3.png)
 
-#### Create a scoring method
+### Create a scoring method
 
 In this section of the application, users can add a custom scoring method. This section allows users to input weights of each stamps, to see the following computation based on the weights given by the user:
 
@@ -709,7 +713,7 @@ In this section of the application, users can add a custom scoring method. This 
 3. Predicted Thor: number of Gitcoin users that are predicted not to be sybil based on the selected weights, type and the prefill.
 4. Predicted Loki: This is the inverse of the predicted Thor. This shows the predicted number of Gitcoin users that are sybil based on the selected weights, type and the prefill.
 
-How to create a scoring method:
+#### How to create a scoring method:
 
 1. Select a prefill. Here you can select any of the pre-existing scoring methods, or choose all panes to be either “All zeros” (which defaults all panes to 0) or “All ones” (which sets all panes to a value of 1).
 2. Select a scoring type. The two scoring types that exists are:
