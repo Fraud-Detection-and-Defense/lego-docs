@@ -783,10 +783,11 @@ Address	                                    Metric
 
 #### Description
 
-SAD is a semi-supervised machine learning mdoel for detecting Sybil users in Gitcoin grants rounds.
+SAD is a semi-supervised machine learning mdoel for detecting Sybil users in Gitcoin grants rounds. At the moment it will be awkward for individual users to implement the SAD mdoel as it is computationally expensive and requires some non-trivial cloud resources that are currently configured and managed by Github data scientists. As the protocol matures, the model will be made increasingly accessible via web-apps and/or containers.
 
 #### Data
 
+The SAD model uses Gitcoion and Gitcoin Passport data. For more information pelase visit the [SAD model Github](https://github.com/Fraud-Detection-and-Defense/SAD).
 
 #### Code
 
