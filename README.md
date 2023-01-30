@@ -35,12 +35,21 @@ This page contains documentation for Gitcoin Sybil defense Legos. Please use the
     - [Performance](#performance)
   - [Lego Documentation](#lego-documentation)
     - [Gitcoin passport](#gitcoin-passport)
-    - [Levenstein Distance](#levenstein-distance)
     - [Shared IP](#shared-ip)
+      - [Description](#description)
+      - [Data](#data)
+      - [Code](#code)
     - [SAD model](#sad-model)
+      - [Description](#description-1)
+      - [Data](#data-1)
+      - [Code](#code-1)
     - [DonorDNA](#donordna)
+      - [Description](#description-2)
+      - [Code](#code-2)
     - [GrantDNA](#grantdna)
     - [Onchain Intersectionality](#onchain-intersectionality)
+      - [Description](#description-3)
+      - [Code](#code-3)
     - [Scoring algorithm/aggregator](#scoring-algorithmaggregator)
   - [How to use the Gitcoin Passport stamp scoring app](#how-to-use-the-gitcoin-passport-stamp-scoring-app)
     - [Introduction](#introduction-1)
@@ -653,12 +662,382 @@ Read more about the [Lego development roadmap](https://gov.gitcoin.co/t/public-g
 
 Gitcoin passport have their own [documentation website](https://docs.passport.gitcoin.co/) that includes detailed instructions for creating and using a Passport, integratign new stamps, using Gitcoin Passport in decentralized applications and everything else a developer or user might nee to understand and work with the Gitcoin Passport technology. There is also a Gitcoin Passport SDK (software development kit) for building new applications.
 
-### Levenstein Distance
 ### Shared IP
+
+#### Description
+
+Shared IP Lego gets information from the passport website which may be the IP address hashed to see if multiple users are connecting from the same device. Multiple users from the same device may be Sybils especially if the same IP address is shared by lots of users.
+
+#### Data
+The primary data source for this Lego is Gitcoin Passport. The Lego looks at current round data rather than historic data.
+
+The inputs to the Lego are:
+
+- Passport iD
+- Hash of IP address
+
+The outputs of the Lego are:
+
+- Boolean indicating whether the user ID is associated with IP sharing.
+
+#### Code
+
+There are two relevant scripts: The first reads in the data and performs the analsis, outputting a second csv file (`data.csv`) containing the result by user. The second script is used to query the result (`data.csv`) from Script 1.
+
+**Analysis Script:**
+ 
+```R
+library(readr)
+library(kit)
+library(parallel)
+library(jsonlite)
+
+## Visits Data
+wall_handles <- read_csv("datain/20220923-001354_wallets.csv")
+visits_file_list <- list.files("datain",full.names=TRUE)
+visit_df <- funique(do.call(rbind,lapply(visits_file_list,function(filename) read_csv(filename)[,c( "id","handle","ip_address","created_on","modified_on")])))
+
+## All Handles
+all_handles <- unique(visit_df$handle)
+all_handles_spl <- split(all_handles, ceiling(seq_along(all_handles)/2500))
+gc()
+
+## For evvery profile function to get score
+get_ipscore <- function(handle,visit_df)
+{
+	tdata <- visit_df[visit_df$handle %in% handle,]
+	t2data <- visit_df[visit_df$ip_address %in% tdata$ip_address & visit_df$handle != handle,]
+	t2data_ip <- split(t2data,t2data$ip_address)
+	ipdf <- data.frame(
+						Handle = handle,
+						IPCount = length(unique(tdata$ip_address)),
+						IPCount_ProfShared_gt0 = sum(unique(tdata$ip_address) %in% unique(t2data$ip_address)),
+						IPCount_ProfShared_gt1 = ifelse(nrow(t2data)==0,0,sum(sapply(t2data_ip,function(x) length(unique(x$handle))>1))),
+						IPCount_ProfShared_gt3 = ifelse(nrow(t2data)==0,0,sum(sapply(t2data_ip,function(x) length(unique(x$handle))>3))),
+						IPProfMatch = NA
+					)
+	if(nrow(t2data)>0)
+	{
+		ipdft <- do.call(rbind,lapply(t2data_ip,function(x) unique(x[,c("ip_address","handle")])))
+		rownames(ipdft) <- NULL
+		names(ipdft) <- c("IP","Handle")
+		ipdf$IPProfMatch <- toJSON(ipdft)
+	}
+	return(ipdf)
+}
+
+## Run in looped and parallel
+ipscores_dft <- list()
+for(idx in 1:length(all_handles_spl))
+{
+	time_start <- Sys.time()
+	ipscores_t <- mclapply(all_handles_spl[[idx]],get_ipscore,visit_df=visit_df,mc.cores=19)
+	ipscores_dft[[idx]] <- do.call(rbind,ipscores_t)
+	time_end <- Sys.time()
+	message(paste0(idx,"/",length(all_handles_spl),":Took ",round(difftime(time_end,time_start,units="mins"),2)," minutes"))
+}
+ipscores_df <- do.call(rbind,ipscores_dft)
+
+## Write out data
+ipscores_df <- ipscores_df[,1:5]
+ipscores_df$address <- wall_handles$address[match(ipscores_df$Handle,wall_handles$handle)]
+data_t <- data.frame(
+						Address = ipscores_df$address,
+						Metric = round(ipscores_df$IPCount_ProfShared_gt0/ipscores_df$IPCount,3)
+					)
+write_csv(data_t[complete.cases(data_t),],"data.csv")
+
+```
+
+**Query script**:
+ 
+```R
+## Load libraries
+library(readr)
+
+## Load Data
+data <- read_csv("data.csv",show_col_types = FALSE)
+
+## Query Address
+query <- function(address,data=data)
+{
+	if(!(address %in% data$Address)) return(NA)
+	return(data$Metric[match(address,data$Address)])
+}
+## Example
+query(address = "0x00de4b13153673bcae2616b67bf822500d325fc3",data=data)
+```
+
+The output data in `data.csv` will look as follows:
+
+```csv
+Address	                                    Metric
+0x00de4b13153673bcae2616b67bf822500d325fc3	0.342
+0x3a051cff039d0ea6964c0f9f01db6e61cc521748	0.227
+0xb8b281e556c478583087ae5af5356b485b83e819	0.186
+0x865c2f85c9fea1c6ac7f53de07554d68cb92ed88	0.051
+0x41997060113af630a591e6cb23e1bc15fc90dc73	0.1
+```
+
 ### SAD model
+
+#### Description
+
+SAD is a semi-supervised machine learning mdoel for detecting Sybil users in Gitcoin grants rounds.
+
+#### Data
+
+
+#### Code
+
+The SAD model code (Python scripts) is available here: https://github.com/Fraud-Detection-and-Defense/SAD. It is currently run using a cloud server
+
 ### DonorDNA
+
+#### Description
+
+A user's past donations can be analyzed to see whether it is similar to groups of other users, which may be indicatative of Sybil rings. The past donations are turned into a binary string that we refer to as the DonorDNA.
+
+#### Code
+
+**Analysis script**
+ 
+```R
+###########################################################################
+## Load raw data clean it and save for further processing
+###########################################################################
+library(readr)
+wall_handles <- read_csv("datain/20220923-001354_wallets.csv")
+data <- read_csv("datain/20220923-001354_contributions_gr15.csv")
+data <- data[data$grant_id!=12,]
+data <- data[data$handle!="gitcoinbot",]
+###########################################################################
+###########################################################################
+
+
+###########################################################################
+## Create Binary Matrix for both grants and handels
+###########################################################################
+all_grants <- sort(unique(data$grant_id))
+all_users <- sort(unique(data$handle))
+data_split <- split(data,data$grant_id)
+matlist <- list()
+for(idx in 1:length(all_grants))
+{
+	t_data <- data_split[[as.character(all_grants[idx])]]
+	matlist[[idx]] <- as.numeric(all_users %in% t_data$handle)
+	message(idx)
+}
+data_mat <- do.call(rbind,matlist)
+rownames(data_mat) <- as.character(all_grants)
+colnames(data_mat) <- all_users
+data_mat <- t(data_mat)
+gc()
+
+## Append Amount donated in Binary
+amtdf <- data.frame(handle=all_users)
+amtlst <- list()
+for(idx in 1:nrow(amtdf))
+{
+  amtt <- sum(data[data$handle==amtdf$handle[idx],]$amount_in_usdt)
+  amtlst[[idx]] <- as.numeric(c(amtt==0,amtt > c(1,2^(1:11))))
+	if((idx %% 1000)==0) message(idx)
+}
+amtdft <- do.call(rbind,amtlst)
+colnames(amtdft) <- paste0("Amt_",c(0,1,2^(1:11)))
+data_mat_amt <- cbind(data_mat,amtdft)
+###########################################################################
+
+###########################################################################
+## Create Distance Matrix 
+###########################################################################
+## Handle Wise Distance Matrix
+library(parallelDist)
+dist_mat_handle_jacc <- parDist(data_mat,method="binary")
+###########################################################################
+
+###########################################################################
+## Jaccard Min Distance Donors
+###########################################################################
+f <- function (i, j, dist_obj) {
+  if (!inherits(dist_obj, "dist")) stop("please provide a 'dist' object")
+  n <- attr(dist_obj, "Size")
+  valid <- (i >= 1) & (j >= 1) & (i > j) & (i <= n) & (j <= n)
+  k <- (2 * n - j) * (j - 1) / 2 + (i - j)
+  k[!valid] <- NA_real_
+  k
+}
+SliceExtract_dist <- function (dist_obj, k) {
+  if (length(k) > 1) stop("The function is not 'vectorized'!")
+  n <- attr(dist_obj, "Size")
+  if (k < 1 || k > n) stop("k out of bound!")
+  ##
+  i <- 1:(k - 1)
+  j <- rep.int(k, k - 1)
+  v1 <- dist_obj[f(j, i, dist_obj)]
+  ## 
+  i <- (k + 1):n
+  j <- rep.int(k, n - k)
+  v2 <- dist_obj[f(i, j, dist_obj)]
+  ## 
+  c(v1, 0, v2)
+}
+options(scipen=999)
+library(readr)
+library(jsonlite)
+dist_mat_handle_jacc_labels <- attributes(dist_mat_handle_jacc)$Labels
+mindist <- data.frame(Handle = dist_mat_handle_jacc_labels, Distance_Min = NA, Handle_Match = NA)
+for(idx in 1:nrow(mindist))
+{
+	slicedata <- data.frame(
+                            Handle = dist_mat_handle_jacc_labels[-idx],
+                            Jaccard = SliceExtract_dist(dist_mat_handle_jacc, idx)[-idx]
+                          )
+  mindist$Distance_Min[idx] <- min(slicedata$Jaccard)
+  slicedata <- slicedata[slicedata$Jaccard <= .25,]
+  mindist$Handle_Match[idx] <- toJSON(slicedata)
+	if((idx %% 1000)==0) message(paste0(idx,"/",nrow(mindist)))
+}
+data_ddna_scores <- mindist[,-3]
+data_ddna_scores$address <- wall_handles$address[match(data_ddna_scores$Handle,wall_handles$handle)]
+data_t <- data.frame(
+            Address = data_ddna_scores$address,
+            Metric = data_ddna_scores$Distance_Min
+          )
+write_csv(data_t[complete.cases(data_t),],"data.csv")
+###########################################################################
+###########################################################################
+```
+**Query script**
+ 
+```R
+## Load libraries
+library(readr)
+
+## Load Data
+data <- read_csv("data.csv",show_col_types = FALSE)
+
+## Query Address
+query <- function(address,data=data)
+{
+	if(!(address %in% data$Address)) return(NA)
+	return(data$Metric[match(address,data$Address)])
+}
+## Example
+query(address = "0x15ceed9b5767924a36b3781a1db5a81a5f76bee0",data=data)
+```
+
+The output data in `data.csv` will look as follows:
+
+```txt
+Address	                                    Metric
+0x8b25d39148fc8a9a1e533734ec6aad6fc5586475	0.6667
+0x57d41ce5c9b95d7e0daabca6e497c85fe48f550e	0.4286
+0x3991e3bd4ebaefc64f358a28e9b286fcbe9efad5	0.1539
+0x5ec2f519fb83ea00988e3cf547cbfe670f374661	0.25
+0xef6bb3fba8ee7d9942f5f44b9222cdccc899b27a	0.2222
+0x15ceed9b5767924a36b3781a1db5a81a5f76bee0	0
+0xe4fabf869fdcdc457c87ebae40ab78be7d345d4b	0.0769
+0x2280bf1322d87ac61d405d57bd62bd6d6cc07dca	0
+0x6ddab3519c2191bcf955597735759f284de22b98	0.1
+
+```
+
+
 ### GrantDNA
 ### Onchain Intersectionality
+
+#### Description
+
+On-chain intersectionality measures how mnay of a set of on-chain credentials a user has.
+
+#### Code
+
+**Analysis script**
+ 
+```R
+library(jsonlite)
+library(readr)
+
+## All Jsons
+wall_handles <- read_csv("datain/20220923-001354_wallets.csv")
+poap <- fromJSON("datain/poaps.json")
+poh <- fromJSON("datain/poh.json")
+lens <- fromJSON("datain/lens.json")
+nfts <- fromJSON("datain/nfts.json")
+snap <- fromJSON("datain/snapshot.json")
+
+## Superset
+final <- data.frame(address = unique(tolower(poap$wallets)))
+
+## POAP Data append
+final$poap <- as.numeric(poap$data$tokensOwned[match(final$address,tolower(poap$data$id))])
+final$poap_count <- ifelse(is.na(final$poap),0,final$poap)
+final$poap <- ifelse(is.na(final$poap),0,1)
+
+## LENS Data append
+final$lens <- as.numeric(!is.na(match(final$address,tolower(lens$data$ownedBy))))
+final$lens_followers <- as.numeric(lens$data$stats$totalFollowers[match(final$address,tolower(lens$data$ownedBy))])
+final$lens_following <- as.numeric(lens$data$stats$totalFollowing[match(final$address,tolower(lens$data$ownedBy))])
+
+## POH
+final$poh <- as.numeric(final$address %in% tolower(poh))
+
+## NFTs
+nftstemp <- data.frame(address = names(table(tolower(nfts$data$token$owner))), nfts = as.numeric(table(tolower(nfts$data$token$owner))))
+final$nft_count <- nftstemp$nfts[match(final$address,nftstemp$address)]
+final$nft <- ifelse(is.na(final$nft_count),0,1)
+
+## Snapshot
+snaptemp <- data.frame(address = names(table(tolower(snap$data$voter))), votes = as.numeric(table(tolower(snap$data$voter))))
+final$snapshot_votes <- snaptemp$votes[match(final$address,snaptemp$address)]
+final$snapshot <- ifelse(is.na(final$snapshot_votes),0,1)
+
+## Score
+final$Score <- final$poap+final$lens+final$poh+final$nft+final$snapshot
+
+## Map Handle
+final <-cbind(Handle=wall_handles$handle[match(final$address,wall_handles$address)],final)
+interdata <- final
+data_t <- data.frame(
+						Address = interdata$address,
+						Metric = interdata$Score
+					)
+write_csv(data_t[complete.cases(data_t),],"data.csv")
+```
+
+**Query script**
+ 
+```R
+## Load libraries
+library(readr)
+
+## Load Data
+data <- read_csv("data.csv",show_col_types = FALSE)
+
+## Query Address
+query <- function(address,data=data)
+{
+	if(!(address %in% data$Address)) return(NA)
+	return(data$Metric[match(address,data$Address)])
+}
+## Example
+query(address = "0x00000000000cd56832ce5dfbcbff02e7ec639bc9",data=data)
+```
+
+The output data in `data.csv` will look as follows:
+
+```txt
+Address	                                    Metric
+0x00000000000cd56832ce5dfbcbff02e7ec639bc9	3
+0x000000000f709dfe4346b80009b8a5197f79aa14	0
+0x000000005ebfb5a950f8fdf3248e99614a7ff220	4
+0x000000085d9a759bb5c3d459d638739c0f48deb0	2
+0x0000009eda4f6f02283857e7903b8d60511ecf1f	0
+0x000000df34e2422bb7744bc93ab7594d371e2d4e	1
+0x0000ce08fa224696a819877070bf378e8b131acf	4
+```
+
 ### Scoring algorithm/aggregator
 
 ## How to use the Gitcoin Passport stamp scoring app
