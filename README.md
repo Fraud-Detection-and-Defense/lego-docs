@@ -46,11 +46,9 @@ This page contains documentation for Gitcoin Sybil defense Legos. Please use the
     - [DonorDNA](#donordna)
       - [Description](#description-2)
       - [Code](#code-2)
-    - [GrantDNA](#grantdna)
     - [Onchain Intersectionality](#onchain-intersectionality)
       - [Description](#description-3)
       - [Code](#code-3)
-    - [Scoring algorithm/aggregator](#scoring-algorithmaggregator)
   - [How to use the Gitcoin Passport stamp scoring app](#how-to-use-the-gitcoin-passport-stamp-scoring-app)
     - [Introduction](#introduction-1)
     - [Create a scoring method](#create-a-scoring-method)
@@ -658,6 +656,7 @@ There will necessarily be costs associated with executing some Legos. This means
 Read more about the [Lego development roadmap](https://gov.gitcoin.co/t/public-goods-legos-roadmap/12546).
 
 ## Lego Documentation
+
 ### Gitcoin passport
 
 Gitcoin passport have their own [documentation website](https://docs.passport.gitcoin.co/) that includes detailed instructions for creating and using a Passport, integratign new stamps, using Gitcoin Passport in decentralized applications and everything else a developer or user might nee to understand and work with the Gitcoin Passport technology. There is also a Gitcoin Passport SDK (software development kit) for building new applications.
@@ -791,7 +790,7 @@ The SAD model uses Gitcoion and Gitcoin Passport data. For more information pela
 
 #### Code
 
-The SAD model code (Python scripts) is available here: https://github.com/Fraud-Detection-and-Defense/SAD. It is currently run using a cloud server
+The SAD model code (Python scripts) is available here: https://github.com/Fraud-Detection-and-Defense/SAD.
 
 ### DonorDNA
 
@@ -944,8 +943,6 @@ Address	                                    Metric
 
 ```
 
-
-### GrantDNA
 ### Onchain Intersectionality
 
 #### Description
@@ -1039,7 +1036,6 @@ Address	                                    Metric
 0x0000ce08fa224696a819877070bf378e8b131acf	4
 ```
 
-### Scoring algorithm/aggregator
 
 ## How to use the Gitcoin Passport stamp scoring app
 
